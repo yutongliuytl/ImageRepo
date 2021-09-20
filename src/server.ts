@@ -1,11 +1,11 @@
 import express from 'express';
 import cors, { CorsOptions } from 'cors';
+import "dotenv/config";
 
 // Import Routes
 import image_routes from './routes/image';
 
 const app = express();
-import "dotenv/config";
 
 const options: CorsOptions = {
   allowedHeaders: [

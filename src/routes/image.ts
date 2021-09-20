@@ -1,6 +1,7 @@
 import express from "express";
 import "dotenv/config";
 
+import { upload } from '../utils/imageUploader';
 import ImageManagementService from "../image_management";
 
 const router = express.Router();
@@ -14,6 +15,10 @@ router.get("/", async (req, res) => {
     console.log(err);
     res.status(500).send(err);
   }
+});
+
+router.post('/upload', upload.array('photos', 10), (req, res) => {
+  res.send('Successfully uploaded ' + req.files?.length+ ' files!');
 });
 
 router.post("/", async (req, res) => {
