@@ -1,0 +1,14 @@
+node_modules/
+public/
+.cache/
+.env
+.env.production
+.env.development
+public/
+.vscode/
+build/
+tsconfig.tsbuildinfo
+
+# Ignore DS_Store
+.DS_Store
+**/.DS_Store
