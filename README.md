@@ -1,9 +1,9 @@
 # ImageRepoBackend
 
-Install dependencies using npm:
-### `npm install`
+### Install dependencies using npm:
+`npm install`
 
-Create `.env` with database credentials:
+### Create `.env` with database credentials:
 
 `PGUSER=<POSTGRES_USER>`
 
@@ -24,6 +24,10 @@ Create `.env` with database credentials:
 `AWS_REGION=<AWS_REGION>`
 
 `ALLOWED_ORGIN="http://localhost:8000"`
+
+### Run backend application:
+
+`npm start`
 
 Server is on port 5000.
 
