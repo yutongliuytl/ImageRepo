@@ -1,5 +1,7 @@
 import { User, Image } from '../db';
 import ImageManagementDAO from "./dao";
+import { getImages } from './utils';
+import { deleteImage } from '../utils/imageMiddleware';
 
 const imageManagementDAO = new ImageManagementDAO();
 
@@ -15,14 +17,23 @@ class ImageManagementService {
     return images;
   }
 
-  static async createImage(imageInfo: Image): Promise<string> {
-    const imageId = await imageManagementDAO.createImage(imageInfo);
-    return imageId;
+  static async createImages(userId: string, files: Express.MulterS3.File[]): Promise<void> {
+    if (!files) {
+      throw new Error('No files uploaded.');
+    }
+    const images = getImages(userId, files);
+    await imageManagementDAO.createImages(images);
   }
 
-  static async deleteImage(imageId: string): Promise<string> {
-    const id = await imageManagementDAO.deleteImage(imageId);
-    return id;
+  static async deleteImage(key: string): Promise<void> {
+    const params = {
+      Bucket: process.env.AWS_BUCKET_NAME || '',
+      Key: key
+    };
+    
+    deleteImage(params, async (err,data) => {
+      await imageManagementDAO.deleteImage(key);
+    });
   }
 }
 

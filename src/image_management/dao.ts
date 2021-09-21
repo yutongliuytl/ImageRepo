@@ -15,20 +15,19 @@ class ImageManagementDAO extends DAO {
     return results.rows;
   }
 
-  async createImage(imageInfo: Image): Promise<string> {
-    const query = `INSERT INTO ${this.imageTable} (link, user_id) values ($1, $2) RETURNING id;`;
-    const values = [imageInfo.link, imageInfo.user_id];
-    
-    const results = await this.query(query, values);
-    return results.rows[0].id;
+  async createImages(images: Image[]): Promise<void> {
+
+    const imagesValues = images.map(image => `('${image.link}', '${image.user_id}')`);
+
+    let query = `INSERT INTO ${this.imageTable} (link, user_id, key) values ${imagesValues.join(', ')} RETURNING id;`;
+    await this.query(query);
   }
 
-  async deleteImage(imageId: string): Promise<string> {
-    const query = `DELETE FROM ${this.imageTable} WHERE id = $1 RETURNING id;`;
-    const values = [imageId];
+  async deleteImage(key: string): Promise<void> {
+    const query = `DELETE FROM ${this.imageTable} WHERE key = $1 RETURNING id;`;
+    const values = [key];
     
-    const results = await this.query(query, values);
-    return results.rows[0].id;
+    await this.query(query, values);
   }
 }
 

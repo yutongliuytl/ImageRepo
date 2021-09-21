@@ -17,6 +17,10 @@ const imageFilter = (req: any, file: any, cb: any) => {
   cb(null, true);
 };
 
+const deleteImage = s3.deleteBucket;
+
+export { deleteImage };
+
 export const upload = multer({
   fileFilter: imageFilter,
   storage: multerS3({

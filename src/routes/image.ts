@@ -1,7 +1,7 @@
 import express from "express";
 import "dotenv/config";
 
-import { upload } from '../utils/imageUploader';
+import { upload } from '../utils/imageMiddleware';
 import ImageManagementService from "../image_management";
 
 const router = express.Router();
@@ -21,12 +21,12 @@ router.post('/upload', upload.array('photos', 10), (req, res) => {
   res.send('Successfully uploaded ' + req.files?.length+ ' files!');
 });
 
-router.post("/", async (req, res) => {
+router.post("/", upload.array('photos', 10), async (req, res) => {
   try {
-    // Upload to S3
-    const imageInfo = req.body.imageInfo;
-    const imageId = await ImageManagementService.createImage(imageInfo);
-    res.status(200).json({ message: "Image uploaded successfully.", imageId });
+    const userId = req.body.userId;
+    const files = req.files as Express.MulterS3.File[];
+    await ImageManagementService.createImages(userId, files);
+    res.status(200).json({ message: "Images uploaded successfully." });
   }
   catch(err){
     console.log(err);
@@ -34,10 +34,10 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.delete("/:imageId", async (req, res) => {
+router.delete("/:key", async (req, res) => {
   try {
-    const imageId = req.params.imageId;
-    await ImageManagementService.deleteImage(imageId);
+    const key = req.params.key;
+    const imageId = await ImageManagementService.deleteImage(key);
     res.status(200).json({ message: "Image deleted successfully.", imageId});
   }
   catch(err){
